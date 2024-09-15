@@ -1,0 +1,214 @@
+/* FormDetails.css */
+
+/* Overall container for the form */
+.form-container {
+    max-width: 80%;
+    margin: 10px auto;
+    padding: 10px;
+    /* background-color: white; */
+    /* box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); */
+    /* border-radius: 8px; */
+    font-family: 'Arial', sans-serif;
+}
+
+/* Header */
+.form-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+    background-color: #061127;
+    height: 9vh;
+    position: fixed;            /* Fixes the header to the top of the page */
+    top: 0;                     /* Position it at the top of the page */
+    left: 0; 
+    right:0;
+}
+
+.logo {
+    height: 50px;
+    margin-right: 200px;
+    margin-left: 140px;
+}
+
+/* FormDetails.css */
+
+/* Import Google Fonts for Bebas Neue */
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue:wght@600&display=swap');
+
+@font-face {
+    font-family: 'Gilroy Light';
+    src: url('../public/fonts/gilroy-light.ttf') format('truetype');
+    font-weight: 400;
+    font-style: normal;
+}
+@font-face {
+    font-family: 'Gilroy Bold';
+    src: url('../public/fonts/gilroy-extra-bold.ttf') format('truetype');
+    font-weight: 400;
+    font-style: normal;
+}
+
+.bebas-neue-regular {
+    font-family: 'Gilroy Bold', sans-serif;
+    font-style: normal;
+    font-size: 46px;
+    font-weight: 600;
+    color: #31bbe4;
+    margin-left: -22px;
+  }
+  
+.form-description2 {
+    color: #000000;
+    font-family: 'Gilroy Light', sans-serif;
+    font-size: 18px;
+    font-weight: 400;
+    margin-left: -22px;
+    line-height: 1.5;
+}
+
+/* Grid layout for the input fields */
+.form-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+}
+
+/* Input field group */
+.form-group {
+    display: flex;
+    flex-direction: column;
+}
+
+.form-group label {
+    margin-bottom: 5px;
+    color: #666;
+    font-size: 14px;
+}
+
+.form-group input {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 16px;
+    /* transition: border-color 0.3s ease; */
+}
+
+/* .form-group input:focus {
+    border-color: #007BFF;
+} */
+
+/* Save button styling */
+.save-button {
+    margin-top: 20px;
+    padding: 10px 20px;
+    background-color: #31bbe4;
+    color: #fff;
+    border: none;
+    border-radius: 15px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    width: 100%;
+}
+
+.save-button:hover {
+    background-color: #0056b3;
+}
+
+/* Mobile responsiveness */
+@media (max-width: 600px) {
+    .form-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* Style for dropdown */
+.form-group select {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 16px;
+    appearance: none; /* Hide default arrow */
+    background-color: #fff;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='10' viewBox='0 0 24 24'%3E%3Cpath fill='black' d='M7 10l5 5 5-5z'/%3E%3C/svg%3E"); /* Custom arrow */
+    background-repeat: no-repeat;
+    background-position: right 10px center; /* Position the arrow */
+    background-size: 20px; /* Adjust arrow size */
+}
+
+/* .form-group select:focus {
+    border-color: #007BFF;
+} */
+
+.form-group label {
+    display: flex;
+    align-items: center;
+    color: #666;
+    font-size: 14px;
+    margin-top: 10px;
+}
+
+.form-group input[type="checkbox"] {
+    margin-right: 10px;
+}
+
+/* Style for reCAPTCHA */
+.form-group .g-recaptcha {
+    margin-top: 15px;
+}
+
+/* Move the dropdown a bit to the left */
+.form-group {
+    margin-left: -10px; /* Adjust left margin */
+}
+
+/* Modal styles */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.modal-content {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    text-align: center;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    max-width: 400px;
+    width: 100%;
+}
+
+.modal-content h2 {
+    font-size: 24px;
+    margin-bottom: 10px;
+}
+
+.modal-content button {
+    background-color: #31bbe4;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.modal-content button:hover {
+    background-color: #0056b3;
+}
+
+
+.required-star {
+    color: rgb(244, 38, 38);
+    margin-right: 5px;
+    font-size: 18px; /* Adjust the size to match your form's text size */
+    margin-left: 5px;
+}
