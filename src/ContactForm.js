@@ -87,13 +87,15 @@ const ContactForm = () => {
             if (response.ok) {
                 const result = await response.json();
                 console.log('Success:', result);
-                setModalMessage('✅ Form submitted successfully! You will be redirected to UrsaLeo website.');
+                setModalMessage('✅ Form submitted successfully! You will be redirected to the UrsaLeo website.');
                 setIsWarning(false);
                 setShowModal(true);
             } else {
                 const errorResult = await response.json();
                 if (errorResult.message === 'User already exists.') {
-                    setModalMessage('❌ The provided email address is already registered.');
+                    setModalMessage(
+                    '❌ This email is already registered. Please log in <a href="https://app.ursaleo.com" target="_blank" style="color: blue; text-decoration: underline;">here</a> or reset your password if needed.'
+                    );
                 } else {
                     setModalMessage(`❌ Error: ${errorResult.message || response.statusText}`);
                 }
@@ -243,7 +245,8 @@ const ContactForm = () => {
                                 <h2>{isWarning ? 'Warning' : 'Success'}</h2>
                             </div>
                             <div className="modal-body">
-                                <p>{modalMessage}</p>
+                                {/* Displaying HTML in the modal */}
+                                <p dangerouslySetInnerHTML={{ __html: modalMessage }}></p>
                             </div>
                             <div className="modal-footer">
                                 <button
