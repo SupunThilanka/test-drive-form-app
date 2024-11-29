@@ -42,6 +42,9 @@ const ContactForm = () => {
 
     const [recaptchaToken, setRecaptchaToken] = useState(null);
     const [showModal, setShowModal] = useState(false);
+    const [modalMessage, setModalMessage] = useState('');
+    const [isWarning, setIsWarning] = useState(false);
+    const [isLoading, setIsLoading] = useState(false); // Loading state for the "Send" button
 
     const handleChange = (e) => {
         const { name, value, type, checked } = e.target;
@@ -60,17 +63,20 @@ const ContactForm = () => {
 
         // Double-check if reCAPTCHA token exists
         if (!recaptchaToken) {
-            alert('Please complete the reCAPTCHA to verify you are not a robot.');
+            setModalMessage('Please complete the reCAPTCHA to verify you are not a robot.');
+            setIsWarning(true);
+            setShowModal(true);
             return;
         }
 
         const payload = {
             email: formData.companyEmail,
-            recaptchaToken,  // Add the reCAPTCHA token to the payload
+            recaptchaToken, // Add the reCAPTCHA token to the payload
         };
 
+        setIsLoading(true); // Start loading
         try {
-            const response = await fetch('https://app.ursaleo.com/api/entitlement/guest/bulk', {
+            const response = await fetch('http://localhost:3100/api/entitlement/guest/bulk', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -81,105 +87,121 @@ const ContactForm = () => {
             if (response.ok) {
                 const result = await response.json();
                 console.log('Success:', result);
-                // Show the modal popup when submission is successful
+                setModalMessage('✅ Form submitted successfully! You will be redirected to UrsaLeo website.');
+                setIsWarning(false);
                 setShowModal(true);
             } else {
-                console.error('Error:', response.statusText);
-                alert(`Form submitted, but there was an error with the API call: ${response.statusText}`);
+                const errorResult = await response.json();
+                if (errorResult.message === 'User already exists.') {
+                    setModalMessage('⚠️ The provided email address is already registered.');
+                } else {
+                    setModalMessage(`❌ Error: ${errorResult.message || response.statusText}`);
+                }
+                setIsWarning(true);
+                setShowModal(true);
             }
         } catch (error) {
             console.error('Error:', error);
-            alert('Form submission failed due to a network error.');
+            setModalMessage('❌ Form submission failed due to a network error.');
+            setIsWarning(true);
+            setShowModal(true);
+        } finally {
+            setIsLoading(false); // Stop loading
         }
     };
 
-    // Handle modal close and redirect to the specified URL
     const handleCloseModal = () => {
         setShowModal(false);
-        window.location.href = 'https://ursaleo.com/';
+        if (!isWarning) {
+            window.location.href = 'https://ursaleo.com/';
+        }
     };
 
     return (
         <div>
-            <div className='form-container'>
+            <div className="form-container">
                 <p className="bebas-neue-regular">Test Drive a Twin</p>
-                <p className="form-description2">Please fill in the details below and click send, you will receive an email invite to test drive a digital twin. Please check your spam folder if you do not see the invite.<br />
-                Test drive is for 30 days and has some feature limitations compared to a production deployment.</p>
-            <form onSubmit={handleSubmit}>
-                <div className="form-grid">
-                    <div className="form-group">
-                        <label htmlFor="firstName">First Name <span className="required-star">*</span></label>
-                        <input
-                            type="text"
-                            id="firstName"
-                            name="firstName"
-                            value={formData.firstName}
-                            onChange={handleChange}
-                            required
-                        />
+                <p className="form-description2">
+                    Please fill in the details below and click send, you will receive an email invite to test drive a digital twin. 
+                    Please check your spam folder if you do not see the invite.<br />
+                    Test drive is for 30 days and has some feature limitations compared to a production deployment.
+                </p>
+                <form onSubmit={handleSubmit}>
+                    <div className="form-grid">
+                        <div className="form-group">
+                            <label htmlFor="firstName">First Name <span className="required-star">*</span></label>
+                            <input
+                                type="text"
+                                id="firstName"
+                                name="firstName"
+                                value={formData.firstName}
+                                onChange={handleChange}
+                                required
+                            />
+                        </div>
+                        <div className="form-group">
+                            <label htmlFor="lastName">Last Name <span className="required-star">*</span></label>
+                            <input
+                                type="text"
+                                id="lastName"
+                                name="lastName"
+                                value={formData.lastName}
+                                onChange={handleChange}
+                                required
+                            />
+                        </div>
+                        <div className="form-group">
+                            <label htmlFor="company">Company <span className="required-star">*</span></label>
+                            <input
+                                type="text"
+                                id="company"
+                                name="company"
+                                value={formData.company}
+                                onChange={handleChange}
+                                required
+                            />
+                        </div>
+                        <div className="form-group">
+                            <label htmlFor="jobTitle">Job Title <span className="required-star">*</span></label>
+                            <input
+                                type="text"
+                                id="jobTitle"
+                                name="jobTitle"
+                                value={formData.jobTitle}
+                                onChange={handleChange}
+                                required
+                            />
+                        </div>
+                        <div className="form-group">
+                            <label htmlFor="country">Country <span className="required-star">*</span></label>
+                            <select
+                                id="country"
+                                name="country"
+                                value={formData.country}
+                                onChange={handleChange}
+                                required
+                            >
+                                <option value=""></option>
+                                {countries.map((country) => (
+                                    <option key={country} value={country}>
+                                        {country}
+                                    </option>
+                                ))}
+                            </select>
+                        </div>
+                        <div className="form-group">
+                            <label htmlFor="companyEmail">Company Email <span className="required-star">*</span></label> 
+                            <input
+                                type="email"
+                                id="companyEmail"
+                                name="companyEmail"
+                                value={formData.companyEmail}
+                                onChange={handleChange}
+                                required
+                            />
+                        </div>
                     </div>
-                    <div className="form-group">
-                        <label htmlFor="lastName">Last Name <span className="required-star">*</span></label>
-                        <input
-                            type="text"
-                            id="lastName"
-                            name="lastName"
-                            value={formData.lastName}
-                            onChange={handleChange}
-                            required
-                        />
-                    </div>
-                    <div className="form-group">
-                        <label htmlFor="company">Company <span className="required-star">*</span></label>
-                        <input
-                            type="text"
-                            id="company"
-                            name="company"
-                            value={formData.company}
-                            onChange={handleChange}
-                            required
-                        />
-                    </div>
-                    <div className="form-group">
-                        <label htmlFor="jobTitle">Job Title <span className="required-star">*</span></label>
-                        <input
-                            type="text"
-                            id="jobTitle"
-                            name="jobTitle"
-                            value={formData.jobTitle}
-                            onChange={handleChange}
-                            required
-                        />
-                    </div>
-                    <div className="form-group">
-                        <label htmlFor="country">Country <span className="required-star">*</span></label>
-                        <select
-                            id="country"
-                            name="country"
-                            value={formData.country}
-                            onChange={handleChange}
-                            required
-                        >
-                            <option value=""></option>
-                            {countries.map((country) => (
-                                <option key={country} value={country}>
-                                    {country}
-                                </option>
-                            ))}
-                        </select>
-                    </div>
-                    <div className="form-group">
-                        <label htmlFor="companyEmail">Company Email <span className="required-star">*</span></label> 
-                        <input
-                            type="email"
-                            id="companyEmail"
-                            name="companyEmail"
-                            value={formData.companyEmail}
-                            onChange={handleChange}
-                            required
-                        />
-                    </div>
-                </div>
+
                     {/* Checkbox for receiving news and offers */}
                     <div className="form-group">
                         <label>
@@ -201,21 +223,39 @@ const ContactForm = () => {
                         />
                     </div>
 
-                <button type="submit" className="save-button">
-                    Send
-                </button>
-            </form>
+                    {/* Send button with loading state */}
+                    <button type="submit" className="save-button" disabled={isLoading}>
+                        {isLoading ? 'Sending...' : 'Send'}
+                    </button>
+                </form>
 
-            {/* Modal for showing success message */}
-            {showModal && (
-                <div className="modal-overlay">
-                    <div className="modal-content">
-                        <h2>Form Submitted Successfully!</h2>
-                        <p>You will be redirected to UrsaLeo website.</p>
-                        <button onClick={handleCloseModal}>OK</button>
+                {showModal && (
+                    <div className="modal-overlay">
+                        <div className={`modal-content ${isWarning ? 'modal-warning' : 'modal-success'}`}>
+                            <div className="modal-header">
+                                <div className={`modal-icon ${isWarning ? 'icon-warning' : 'icon-success'}`}>
+                                    {isWarning ? (
+                                        <i className="fas fa-exclamation-circle"></i>
+                                    ) : (
+                                        <i className="fas fa-check-circle"></i>
+                                    )}
+                                </div>
+                                <h2>{isWarning ? 'Warning' : 'Success'}</h2>
+                            </div>
+                            <div className="modal-body">
+                                <p>{modalMessage}</p>
+                            </div>
+                            <div className="modal-footer">
+                                <button
+                                    onClick={handleCloseModal}
+                                    className={`modal-button ${isWarning ? 'button-warning' : 'button-success'}`}
+                                >
+                                    OK
+                                </button>
+                            </div>
+                        </div>
                     </div>
-                </div>
-            )}
+                )}
             </div>
         </div>
     );
