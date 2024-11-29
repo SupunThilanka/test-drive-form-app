@@ -76,7 +76,7 @@ const ContactForm = () => {
 
         setIsLoading(true); // Start loading
         try {
-            const response = await fetch('http://localhost:3100/api/entitlement/guest/bulk', {
+            const response = await fetch('https://app.ursaleo.com/api/entitlement/guest/bulk', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -93,7 +93,7 @@ const ContactForm = () => {
             } else {
                 const errorResult = await response.json();
                 if (errorResult.message === 'User already exists.') {
-                    setModalMessage('⚠️ The provided email address is already registered.');
+                    setModalMessage('❌ The provided email address is already registered.');
                 } else {
                     setModalMessage(`❌ Error: ${errorResult.message || response.statusText}`);
                 }
