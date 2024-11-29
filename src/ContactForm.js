@@ -94,7 +94,7 @@ const ContactForm = () => {
                 const errorResult = await response.json();
                 if (errorResult.message === 'User already exists.') {
                     setModalMessage(
-                    '❌ This email is already registered. Please log in <a href="https://app.ursaleo.com" target="_blank" style="color: blue; text-decoration: underline;">here</a> and reset your password if needed.'
+                    '❌ This email is already registered. Please log in <a href="https://app.ursaleo.com" target="_blank" style="color: blue; text-decoration: underline;">here</a> or reset your password if needed.'
                     );
                 } else {
                     setModalMessage(`❌ Error: ${errorResult.message || response.statusText}`);
