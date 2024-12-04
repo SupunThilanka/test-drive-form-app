@@ -87,15 +87,15 @@ const ContactForm = () => {
             if (response.ok) {
                 const result = await response.json();
                 console.log('Success:', result);
-                setModalMessage('✅ Form submitted successfully! You will be redirected to the UrsaLeo website.');
+                setModalMessage('✅ Form submitted successfully!. You will be redirected to the UrsaLeo website.');
                 setIsWarning(false);
                 setShowModal(true);
             } else {
                 const errorResult = await response.json();
                 if (errorResult.message === 'User already exists.') {
                     setModalMessage(
-                    '❌ This email is already registered. Please log in <a href="https://app.ursaleo.com" target="_blank" style="color: blue; text-decoration: underline;">here</a> or reset your password if needed.'
-                    );
+'❌ This email is already registered. Please log in <a href="https://app.ursaleo.com" target="_blank" style="color: blue; text-decoration: underline;">here</a> or reset your password if needed.<br><br>If you require further assistance, please contact our support team at <a href="mailto:support@ursaleo.com" style="color: blue; text-decoration: underline;">support@ursaleo.com</a>.'
+                );
                 } else {
                     setModalMessage(`❌ Error: ${errorResult.message || response.statusText}`);
                 }
